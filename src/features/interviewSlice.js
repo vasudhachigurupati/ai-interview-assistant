@@ -19,10 +19,10 @@ export const fetchQuestion = createAsyncThunk(
 
     const topic = currentQuestionIndex % 2 === 0 ? 'React' : 'Node.js'; // Alternate topics
 
-    const response = await axios.post('http://localhost:3001/generate-question', {
-      difficulty,
-      topic,
-    });
+   const response = await axios.post('https://ai-interview-backend.onrender.com/generate-question', {
+  difficulty,
+  topic,
+});
     
     // Return both the question and its difficulty
     return { question: response.data.question, difficulty };
