@@ -19,7 +19,7 @@ export const fetchQuestion = createAsyncThunk(
 
     const topic = currentQuestionIndex % 2 === 0 ? 'React' : 'Node.js'; // Alternate topics
 
-   const response = await axios.post('https://ai-interview-backend.onrender.com/generate-question', {
+   const response = await axios.post('https://ai-interview-backend-sr2w.onrender.com/generate-question', {
   difficulty,
   topic,
 });
@@ -33,7 +33,7 @@ export const getFinalEvaluation = createAsyncThunk(
   'interview/getFinalEvaluation',
   async (_, { getState }) => {
     const { interview } = getState();
-    const response = await axios.post('http://localhost:3001/evaluate-interview', {
+    const response = await axios.post('https://ai-interview-backend-sr2w.onrender.com/evaluate-interview', {
       transcript: interview.answers,
     });
     return response.data; // This will be { finalScore, summary }
