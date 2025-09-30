@@ -3,7 +3,7 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import IntervieweePage from './pages/IntervieweePage';
 import InterviewerPage from './pages/InterviewerPage';
-import CandidateDetailPage from './pages/CandidateDetailPage'; // 1. IMPORT THE NEW PAGE
+import CandidateDetailPage from './pages/CandidateDetailPage'; 
 import './App.css';
 
 function App() {
@@ -20,15 +20,15 @@ function App() {
           </Link>
         </nav>
 
-        {/* Page Content */}
-        <main style={{ padding: '1rem' }}>
-          <Routes>
-            <Route path="/" element={<IntervieweePage />} />
-            <Route path="/interviewer" element={<InterviewerPage />} />
-            {/* 2. ADD THIS NEW ROUTE */}
-            <Route path="/candidate/:candidateId" element={<CandidateDetailPage />} />
-          </Routes>
-        </main>
+        <main>
+  <div className="container">
+    <Routes>
+      <Route path="/" element={<IntervieweePage />} />
+      <Route path="/interviewer" element={<InterviewerPage />} />
+      <Route path="/candidate/:candidateId" element={<CandidateDetailPage />} />
+    </Routes>
+  </div>
+    </main>
       </div>
     </BrowserRouter>
   );

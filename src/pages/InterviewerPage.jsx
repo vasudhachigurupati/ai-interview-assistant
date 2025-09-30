@@ -36,6 +36,7 @@ function InterviewerPage() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px 0' }}>
         <input
+          className="input"
           type="text"
           placeholder="Search by name..."
           value={searchTerm}
@@ -48,7 +49,7 @@ function InterviewerPage() {
         </select>
       </div>
 
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ borderBottom: '2px solid black' }}>
             <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>

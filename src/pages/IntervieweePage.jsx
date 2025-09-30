@@ -144,13 +144,14 @@ function IntervieweePage() {
         <div style={{ maxWidth: '800px', margin: '20px auto', textAlign: 'center' }}>
           <h2>Interview in Progress...</h2>
           <h3>Question {interview.currentQuestionIndex + 1} of 6</h3>
-          <div style={{ fontSize: '1.5rem', margin: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', minHeight: '100px', backgroundColor: '#f9f9f9' }}>
+          <div className="card">
             <p>{interview.currentQuestion}</p>
           </div>
           <h2 style={{ color: timeLeft <= 5 && timeLeft > 0 ? 'red' : 'black' }}>
             {timeLeft > 0 ? `Time Left: ${timeLeft}s` : "Time's Up!"}
           </h2>
           <textarea
+            className="textarea"
             value={currentAnswer}
             onChange={(e) => setCurrentAnswer(e.target.value)}
             placeholder="Type your answer here..."
@@ -158,6 +159,7 @@ function IntervieweePage() {
             disabled={interview.status !== 'active' || timeLeft <= 0}
           />
           <button 
+            className="button"
             onClick={handleSubmitAnswer}
             style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', marginTop: '10px' }}
             disabled={interview.status !== 'active' || timeLeft <= 0}

@@ -80,7 +80,7 @@ const extractContactInfo = (text) => {
       <h2>Upload Your Resume</h2>
       <p>Please upload your resume in PDF or DOCX format to begin.</p>
       <input type="file" accept=".pdf,.docx" onChange={handleFileChange} />
-      <button onClick={handleParseResume} disabled={!selectedFile || isParsing}>
+      <button className="button" onClick={handleParseResume} disabled={!selectedFile || isParsing}>
         {isParsing ? 'Parsing...' : 'Upload and Start'}
       </button>
     </div>
