@@ -1,10 +1,9 @@
-// src/App.jsx
 
+import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import IntervieweePage from './pages/IntervieweePage';
 import InterviewerPage from './pages/InterviewerPage';
 import CandidateDetailPage from './pages/CandidateDetailPage'; 
-import './App.css';
 
 function App() {
   return (
