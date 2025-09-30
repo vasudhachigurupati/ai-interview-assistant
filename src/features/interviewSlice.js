@@ -65,7 +65,9 @@ export const interviewSlice = createSlice({
       state.status = 'loading'; 
     },
    
-    resetInterview: () => initialState,
+   resetInterview: (state) => {
+  return initialState;
+},
   },
   extraReducers: (builder) => {
     builder

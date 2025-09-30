@@ -1,15 +1,13 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addCandidate } from '../features/candidatesSlice';
-// Import our new actions
 import { fetchQuestion, submitAnswer, resetInterview, getFinalEvaluation } from '../features/interviewSlice';
 
 import ResumeUpload from '../components/ResumeUpload';
 import Chatbot from '../components/Chatbot';
 
-// ... (initialBotMessage is the same)
 const initialBotMessage = {
   text: "Hello! I've reviewed your resume. I just need to confirm a few details before we begin.",
   sender: 'bot',
@@ -23,50 +21,65 @@ function IntervieweePage() {
   const dispatch = useDispatch();
   const interview = useSelector((state) => state.interview);
   
-  const [timeLeft, setTimeLeft] = useState(interview.timerValue);
+  const [timeLeft, setTimeLeft] = useState(0);
 
-  // This powerful useEffect now controls the entire interview flow
+  // This useEffect controls the overall interview flow
   useEffect(() => {
-  if (interview.currentQuestionIndex < 6 && interview.status === 'loading') {
+    const justStarted = step === 'interview' && interview.status === 'idle' && interview.currentQuestionIndex === 0;
+
+  // Condition 2: We have submitted an answer and need the next question
+  const needsNextQuestion = interview.status === 'loading' && interview.currentQuestionIndex < 6;
+
+  if (justStarted || needsNextQuestion) {
     dispatch(fetchQuestion());
   }
-  if (interview.currentQuestionIndex === 6 && interview.status !== 'evaluating' && interview.status !== 'finished') {
-    // After the 6th question, dispatch the evaluation thunk
-    dispatch(getFinalEvaluation(interview.answers));
-    setStep('finished');
-  }
-}, [interview.currentQuestionIndex, interview.status, dispatch,interview.answers]);
-  // This useEffect now controls the timer
+
+    if (interview.currentQuestionIndex < 6 && interview.status === 'loading') {
+      dispatch(fetchQuestion());
+    }
+    if (interview.currentQuestionIndex === 6 && interview.status !== 'evaluating' && interview.status !== 'finished') {
+      dispatch(getFinalEvaluation());
+      setStep('finished');
+    }
+  }, [step,interview.currentQuestionIndex, interview.status, dispatch]);
+  
+  // The stable submit function
+  const handleSubmitAnswer = useCallback(() => {
+    dispatch(submitAnswer(currentAnswer));
+    setCurrentAnswer('');
+  }, [dispatch, currentAnswer]);
+
+  // This useEffect resets the timer when a new question arrives
   useEffect(() => {
-    // When a new question is loaded, reset the local timer
     if (interview.status === 'active') {
       setTimeLeft(interview.timerValue);
     }
+  }, [interview.status, interview.timerValue]);
 
-    if (timeLeft <= 0 || interview.status !== 'active') {
-      return; // Stop if time is up or not in an active question
+  // This useEffect handles the countdown AND auto-submit
+  useEffect(() => {
+    if (interview.status !== 'active' || step !== 'interview') {
+      return;
     }
-    
+
+    if (timeLeft <= 0) {
+      handleSubmitAnswer(); // Auto-submit when time is up
+      return;
+    }
+
     const timerId = setTimeout(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
 
     return () => clearTimeout(timerId);
-  }, [timeLeft, interview.status, interview.timerValue]);
+  }, [timeLeft, interview.status, step, handleSubmitAnswer]);
 
-
-  const handleSubmitAnswer = () => {
-    // When time is up or button is clicked, dispatch the answer to Redux
-    dispatch(submitAnswer(currentAnswer));
-    setCurrentAnswer(''); // Clear the textarea
-  };
 
   const handleStartInterview = () => {
-    dispatch(resetInterview()); // Reset previous interview state
+    dispatch(resetInterview());
     dispatch(addCandidate(candidateData));
     setStep('interview');
-    // Trigger the first question fetch
-    dispatch(fetchQuestion());
+    
   };
 
   // ... (All other handler functions for the pre-interview steps are the same)
@@ -126,20 +139,19 @@ function IntervieweePage() {
 
   return (
     <div>
-      {/* ... (upload, chat, and confirm JSX is the same) ... */}
       {step === 'upload' && <ResumeUpload onDataExtracted={handleDataExtracted} />}
       {step === 'chat' && <Chatbot messages={messages} userInput={userInput} onUserInputChange={handleUserInputChange} onSendMessage={handleSendMessage} isWaitingForResponse={false} />}
       {step === 'confirm' && (
         <div style={{ maxWidth: '600px', margin: '20px auto', textAlign: 'center' }}>
           <h2>✅ Review and Correct Your Details</h2>
           <p style={{color: '#555'}}>If anything is wrong, please fix it below.</p>
-          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Full Name:</label><input type="text" name="name" value={candidateData.name} onChange={handleConfirmationChange} style={{ width: '100%', padding: '8px' }} /></div>
-          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Email:</label><input type="email" name="email" value={candidateData.email} onChange={handleConfirmationChange} style={{ width: '100%', padding: '8px' }}/></div>
-          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Phone:</label><input type="tel" name="phone" value={candidateData.phone} onChange={handleConfirmationChange} style={{ width: '100%', padding: '8px' }}/></div>
-          <button onClick={handleStartInterview} style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', marginTop: '20px' }}>Confirm and Start Interview</button>
+          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Full Name:</label><input className="input" type="text" name="name" value={candidateData.name} onChange={handleConfirmationChange} /></div>
+          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Email:</label><input className="input" type="email" name="email" value={candidateData.email} onChange={handleConfirmationChange} /></div>
+          <div style={{ margin: '10px 0', textAlign: 'left' }}><label>Phone:</label><input className="input" type="tel" name="phone" value={candidateData.phone} onChange={handleConfirmationChange} /></div>
+          <button className="button" onClick={handleStartInterview}>Confirm and Start Interview</button>
         </div>
       )}
-
+      
       {step === 'interview' && (
         <div style={{ maxWidth: '800px', margin: '20px auto', textAlign: 'center' }}>
           <h2>Interview in Progress...</h2>
@@ -155,36 +167,33 @@ function IntervieweePage() {
             value={currentAnswer}
             onChange={(e) => setCurrentAnswer(e.target.value)}
             placeholder="Type your answer here..."
-            style={{ width: '100%', minHeight: '150px', padding: '10px', fontSize: '1rem' }}
-            disabled={interview.status !== 'active' || timeLeft <= 0}
+            disabled={interview.status !== 'active'}
           />
           <button 
             className="button"
             onClick={handleSubmitAnswer}
-            style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', marginTop: '10px' }}
-            disabled={interview.status !== 'active' || timeLeft <= 0}
+            disabled={interview.status !== 'active'}
           >
             Submit Answer
           </button>
         </div>
       )}
 
-      
       {step === 'finished' && (
-      <div style={{ textAlign: 'center' }}>
-        <h2>Interview Complete!</h2>
-        {interview.status === 'evaluating' && (
-          <p>Calculating your results...</p>
-        )}
-        {interview.status === 'finished' && (
-          <div style={{ maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-            <h3>Final Score: {interview.finalScore} / 100</h3>
-            <h4>Summary:</h4>
-            <p>{interview.summary}</p>
-          </div>
-        )}
+        <div style={{ textAlign: 'center' }}>
+          <h2>Interview Complete!</h2>
+          {interview.status === 'evaluating' && (
+            <p>Calculating your results...</p>
+          )}
+          {interview.status === 'finished' && (
+            <div className="card" style={{ maxWidth: '600px', margin: '20px auto' }}>
+              <h3>Final Score: {interview.finalScore} / 100</h3>
+              <h4>Summary:</h4>
+              <p>{interview.summary}</p>
+            </div>
+          )}
         </div>
-    )}
+      )}
     </div>
   );
 }
