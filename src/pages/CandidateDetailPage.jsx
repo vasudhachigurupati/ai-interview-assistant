@@ -25,7 +25,7 @@ function CandidateDetailPage() {
       
       <h1>{candidate.name}'s Report</h1>
 
-      <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+      <div style={{ background: '#918787ff', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Profile</h3>
         <p><strong>Name:</strong> {candidate.name}</p>
         <p><strong>Email:</strong> {candidate.email}</p>
@@ -40,12 +40,21 @@ function CandidateDetailPage() {
       
       <div>
         <h3>Full Interview Transcript</h3>
-        {candidate.answers.map((item, index) => (
-          <div key={index} style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
-            <p><strong>Question {index + 1}:</strong> {item.question}</p>
-            <p><strong>Answer:</strong> {item.answer || "No answer provided."}</p>
+        {candidate.answers && candidate.answers.length > 0 ? (
+          candidate.answers.map((item, index) => (
+            <div key={index} className="card" style={{ marginBottom: '15px' }}>
+              <p><strong>Question {index + 1}:</strong> {item.question}</p>
+              <hr style={{ border: 'none', borderTop: '1px solid #eee' }} />
+              <p style={{ backgroundColor: '#f9f9f9', padding: '10px', borderRadius: '5px' }}>
+                <strong>Answer:</strong> {item.answer || "No answer provided."}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="card">
+            <p>No answers were recorded for this interview.</p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

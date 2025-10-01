@@ -30,6 +30,7 @@ function InterviewerPage() {
     navigate(`/candidate/${candidateId}`);
   };
 
+
   return (
     <div style={{ maxWidth: '1000px', margin: '20px auto' }}>
       <h1>Interviewer Dashboard</h1>
