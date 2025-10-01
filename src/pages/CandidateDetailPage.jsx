@@ -25,14 +25,14 @@ function CandidateDetailPage() {
       
       <h1>{candidate.name}'s Report</h1>
 
-      <div style={{ background: '#918787ff', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+      <div className="custom-card" style={{ marginBottom: '20px' }}>
         <h3>Profile</h3>
         <p><strong>Name:</strong> {candidate.name}</p>
         <p><strong>Email:</strong> {candidate.email}</p>
         <p><strong>Phone:</strong> {candidate.phone}</p>
       </div>
 
-      <div style={{ background: '#f0f8ff', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+      <div className="custom-card" style={{ backgroundColor: '#faf5ff', marginBottom: '20px' }}>
         <h3>AI Evaluation</h3>
         <p><strong>Final Score:</strong> {candidate.finalScore} / 100</p>
         <p><strong>Summary:</strong> {candidate.summary}</p>
@@ -42,7 +42,7 @@ function CandidateDetailPage() {
         <h3>Full Interview Transcript</h3>
         {candidate.answers && candidate.answers.length > 0 ? (
           candidate.answers.map((item, index) => (
-            <div key={index} className="card" style={{ marginBottom: '15px' }}>
+            <div key={index} className="custom-card" style={{ marginBottom: '15px' }}>
               <p><strong>Question {index + 1}:</strong> {item.question}</p>
               <hr style={{ border: 'none', borderTop: '1px solid #eee' }} />
               <p style={{ backgroundColor: '#f9f9f9', padding: '10px', borderRadius: '5px' }}>

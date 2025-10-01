@@ -19,15 +19,15 @@ function App() {
           </Link>
         </nav>
 
-        <main>
-  <div className="container">
+      <main className="container">
+  <div className="app-shell"> {/* <-- ADD THIS WRAPPER */}
     <Routes>
       <Route path="/" element={<IntervieweePage />} />
       <Route path="/interviewer" element={<InterviewerPage />} />
       <Route path="/candidate/:candidateId" element={<CandidateDetailPage />} />
     </Routes>
-  </div>
-    </main>
+  </div> {/* <-- AND THIS CLOSING TAG */}
+</main>
       </div>
     </BrowserRouter>
   );

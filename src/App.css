@@ -1,5 +1,5 @@
 /* src/App.css */
-
+/*
 .container {
   max-width: 1000px;
   margin: 0 auto;
@@ -51,7 +51,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Table Styles for Dashboard */
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -74,7 +74,6 @@
   cursor: pointer;
 }
 
-/* Nav Bar Styles */
 nav {
   background-color: white !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -93,4 +92,76 @@ nav a {
 
 nav a:hover {
   background-color: #f0f0f0;
+}
+  */
+
+/* src/App.css */
+
+/* --- 1. DEFINE OUR CUSTOM SWIPE THEME --- */
+:root {
+  --swipe-purple: #581c87;      /* A deep, confident purple */
+  --swipe-purple-light: #f3e8ff; /* A light lavender for accents */
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+/* --- 2. ENHANCE THE OVERALL LAYOUT --- */
+body {
+  background-color: #f8f9fa; /* A slightly off-white background */
+}
+
+/* We will wrap our main content in this to give it a nice frame */
+.app-shell {
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  padding: 2rem;
+}
+
+
+/* --- 3. OVERRIDE AND IMPROVE PICO'S STYLES --- */
+
+/* Make headings bolder and use the brand color */
+h1, h2 {
+  font-weight: 700;
+  color: var(--swipe-purple);
+}
+
+/* Style the primary buttons with the brand color */
+button, input[type="submit"] {
+  --pico-font-weight: 600;
+  --pico-border-radius: 8px;
+  background-color: var(--swipe-purple);
+  border-color: var(--swipe-purple);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: #4c1d95;
+  transform: translateY(-2px);
+}
+
+/* Style the navigation links */
+nav a {
+  color: var(--swipe-purple);
+  font-weight: 600;
+}
+
+/* Improve the table on the dashboard */
+table tbody tr:hover {
+  background-color: var(--swipe-purple-light);
+  cursor: pointer;
+}
+
+/* --- 4. CREATE A CUSTOM 'CARD' COMPONENT --- */
+/* A reusable card for displaying content */
+.custom-card {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
